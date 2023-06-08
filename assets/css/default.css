@@ -1,0 +1,49 @@
+body {
+    background-color: rgb(255 0 82 / 6%);
+    font-family: 'Roboto';
+}
+
+.col-xxl-12 {
+    max-width: 1750px !important;
+}
+
+
+.btn:focus, .form-control:focus, .form-select:focus, .accordion-button:focus {
+    outline: none !important;
+    box-shadow: none;
+    border-color: rgba(59, 171, 113, 0.29);
+}
+
+
+.text_color_default  {
+    color: #cc2727;
+}
+
+
+.btn_default {
+    background-color: #cd2727;
+    border-color: #b11a1a;
+    background-image: linear-gradient(to top,rgba(0,0,0,.1),rgba(255,255,255,.1));
+    color: white;
+}
+
+.btn_default:hover {
+    background-color: rgba(211 125 250 / 92%);;
+}
+
+.btn_default:disabled {
+    background-color: #626f68;
+    color: #ffffff;
+    border-radius: 2px;
+}
+
+
+
+.border_color_default {
+    border-color: #fbf5ff !important;
+}
+
+.background_color_default {
+    background-color: rgb(255 0 82 / 6%);
+}
+
