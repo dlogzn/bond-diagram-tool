@@ -95,10 +95,14 @@
                                 <div class="form-control border-0 invisible text-danger die_height_error_message" style="font-size: 80%;">Error Message</div>
                                 <input type="file" name="netlist" id="netlist" class="form-control">
                                 <div class="form-control border-0 invisible text-danger netlist_error_message" style="font-size: 80%;">Error Message</div>
-                                <div class="mb-3 text-center" style="margin-top: -10px;"><a href="javascript:void(0)" class="text-decoration-none small" id="download_template">Download the Template</a></div>
-                                <div class="text-end">
-                                    <button type="submit" class="btn btn_default border-0 rounded-0 py-2 px-3">Draw Diagram</button>
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0 pt-2 me-3"><a href="javascript:void(0)" class="text-decoration-none small" id="download_template">Get Template</a></div>
+                                    <div class="flex-grow-1">
+                                        <button type="button" class="btn btn_default border-0 rounded-0 py-2 px-3 me-3" id="run_demo">Run Demo</button>
+                                        <button type="submit" class="btn btn_default border-0 rounded-0 py-2 px-3">Draw Diagram</button>
+                                    </div>
                                 </div>
+
                             </form>
                         </div>
                     </div>
@@ -132,8 +136,28 @@
 <script type="text/javascript">
 
 
+    $(document).on('click', '#run_demo', function (event) {
+        event.preventDefault();
+        $('.package_type_error_message').addClass('invisible').text('Error Message');
+        $('.die_width_error_message').addClass('invisible').text('Error Message');
+        $('.die_height_error_message').addClass('invisible').text('Error Message');
+        $('.netlist_error_message').addClass('invisible').text('Error Message');
+
+        $('#package_type').val('7x7, 32, .65');
+        $('#die_width').val('2275');
+        $('#die_height').val('1850');
+
+        let formData = new FormData();
+        formData.append('package_type', '7x7, 32, .65');
+        formData.append('die_width', '2275');
+        formData.append('die_height', '1850');
+        formData.append('run_demo', '1');
+        drawDiagram(formData);
+    });
+
     $(document).on('submit', '#bond_diagram_form', function (event) {
         event.preventDefault();
+
 
         $('.package_type_error_message').addClass('invisible').text('Error Message');
         $('.die_width_error_message').addClass('invisible').text('Error Message');
@@ -142,7 +166,11 @@
 
         let formData = new FormData(this);
         formData.append('netlist', document.getElementById('netlist').files[0]);
+        formData.append('run_demo', '0');
+        drawDiagram(formData);
+    });
 
+    function drawDiagram(formData) {
         $.ajax({
             method: 'post',
             url: 'read_excel.php',
@@ -324,9 +352,10 @@
             },
             error: function (xhr) {
                 console.log(xhr);
+
             }
         });
-    });
+    }
 
     $(document).on('click', '#download_diagram', function () {
         let downloadLink = document.createElement('a');

@@ -31,6 +31,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     $packageType = $_POST['package_type'];
     $dieWidth = $_POST['die_width'];
     $dieHeight = $_POST['die_height'];
+    $runDemo = $_POST['run_demo'];
+
     $validationErrors = [];
     if(empty($packageType)) {
         $validationErrors['package_type'] = 'Package Type field is required.';
@@ -47,20 +49,28 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     if(!is_numeric($dieHeight)) {
         $validationErrors['die_height'] = 'Die Height field must contain numeric value.';
     }
-    if ($_FILES['netlist']['size'] === 0 || $_FILES['netlist']['error'] > 0) {
-        $validationErrors['netlist'] = 'Netlist File is required.';
-    }
-    $allowedExtensions = ['xls', 'xlsx'];
-    $fileName = $_FILES['netlist']['name'];
-    $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-    if (!in_array($fileExtension, $allowedExtensions)) {
-        $validationErrors['netlist'] = 'Netlist File Type must be xls or xlsx.';
+    if ((int)$runDemo === 0) {
+        if ($_FILES['netlist']['size'] === 0 || $_FILES['netlist']['error'] > 0) {
+            $validationErrors['netlist'] = 'Netlist File is required.';
+        }
+        $allowedExtensions = ['xls', 'xlsx'];
+        $fileName = $_FILES['netlist']['name'];
+        $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+        if (!in_array($fileExtension, $allowedExtensions)) {
+            $validationErrors['netlist'] = 'Netlist File Type must be xls or xlsx.';
+        }
     }
 
+
     if (count($validationErrors) === 0) {
-        $targetDir = 'uploads/';
-        $targetFile = $targetDir . basename($_FILES['netlist']['name']);
-        move_uploaded_file($_FILES['netlist']['tmp_name'], $targetFile);
+        if ((int)$runDemo === 0) {
+            $targetDir = 'uploads/';
+            $targetFile = $targetDir . basename($_FILES['netlist']['name']);
+            move_uploaded_file($_FILES['netlist']['tmp_name'], $targetFile);
+        } else {
+            $targetFile = __DIR__ . '/assets/template/template.xlsx';
+        }
+
         $readExcel = new Read_Excel();
 
         $mmToPx = 3.7795275591;
